@@ -8,18 +8,20 @@ namespace FolderTree.Models
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .Entity<Folder>()
-                .HasOne(f => f.ParrentFolder)
-                .WithMany(f => f.SubFolders)
-                .HasForeignKey(f => f.ParrentId)
-                .IsRequired(false);
+            modelBuilder.Entity<Folder>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Name);
+                entity.HasOne(x => x.ParrentFolder)
+                    .WithMany(x => x.SubFolders)
+                    .HasForeignKey(x => x.ParrentId)
+                    .IsRequired(false);
+            });
         }
 
     }
