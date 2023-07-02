@@ -1,0 +1,18 @@
+﻿@model FolderTree.Models.Folder
+
+@{
+	ViewData["Title"] = "ImportFoldersTree";
+}
+
+<h1>ImportFoldersTree</h1>
+
+<hr />
+
+@using (Html.BeginForm("ImportFoldersTree", "Folders", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	<div>
+		@Html.TextBox("file", "", new {  type= "file"}) <br />
+		<input type="submit" value="Upload" />
+		@ViewBag.Message
+	</div>
+}

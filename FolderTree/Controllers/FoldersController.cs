@@ -13,37 +13,37 @@ using System.Text.Json.Serialization;
 
 namespace FolderTree.Controllers
 {
-    public class FoldersController : Controller
-    {
-        private readonly AppDbContext _context;
+	public class FoldersController : Controller
+	{
+		private readonly AppDbContext _context;
 
-        public FoldersController(AppDbContext context)
-        {
-            _context = context;
-        }
+		public FoldersController(AppDbContext context)
+		{
+			_context = context;
+		}
 
-        // Initial data creation if db is empty
-        public async Task<IActionResult> InitialDataCreation()
-        {
-            if (_context.Folders.ToList().Count == 0)
-            {   
+		// Initial data creation if db is empty
+		public async Task<IActionResult> InitialDataCreation()
+		{
+			if (_context.Folders.ToList().Count == 0)
+			{
 				await _context.AddRangeAsync(InitialData.InitialDataListGeneration());
 				await _context.SaveChangesAsync();
 			}
-            return RedirectToAction(nameof(ShowSubFolders));
-        }
+			return RedirectToAction(nameof(ShowSubFolders));
+		}
 
-        // GET: SubFolders
-        public async Task<IActionResult> ShowSubFolders(int? id = 1) 
-        {
+		// GET: SubFolders
+		public async Task<IActionResult> ShowSubFolders(int? id = 1)
+		{
 			if (id == null || _context.Folders == null)
 			{
 				return NotFound();
 			}
 
-            List<Folder> subFoldersList = await _context.Folders
-                .Where(f => f.ParrentId == id)
-                .ToListAsync();
+			List<Folder> subFoldersList = await _context.Folders
+				.Where(f => f.ParrentId == id)
+				.ToListAsync();
 
 			var folder = await _context.Folders
 				.FirstOrDefaultAsync(m => m.Id == id);
@@ -55,27 +55,59 @@ namespace FolderTree.Controllers
 
 			folder.SubFolders = subFoldersList;
 
-            await _context.SaveChangesAsync();
-            			
-			return View(folder);
-        }
+			await _context.SaveChangesAsync();
 
-        // Import folders tree
-        public async Task<FileResult> ExportFoldersTree()
-        {
-            var export = await _context.Folders.Select(x => x).ToListAsync();
+			return View(folder);
+		}
+
+		// export folders tree
+		public async Task<FileResult> ExportFoldersTree()
+		{
+			List<Folder> export = await _context.Folders.Select(x => x).ToListAsync();
 
 			JsonSerializerOptions options = new()
 			{
-				ReferenceHandler = ReferenceHandler.IgnoreCycles,
+				ReferenceHandler = ReferenceHandler.Preserve, // ReferenceHandler.IgnoreCycles
 				WriteIndented = true
 			};
 
 			string exportJson = JsonSerializer.Serialize(export, options);
 
-            byte[] exportBytes = Encoding.Default.GetBytes(exportJson);
-            
-            return File(exportBytes, "text/plain", "foldertree.txt");
-        }
-    }
+			byte[] exportBytes = Encoding.Default.GetBytes(exportJson);
+
+			return File(exportBytes, "text/plain", "foldertree.txt");
+		}
+
+		// GET: importFoldersTree
+		[HttpGet]
+		public IActionResult ImportFoldersTree()
+		{
+			return View();
+		}
+
+		// import folders tree
+		[HttpPost]
+		public async Task<IActionResult> ImportFoldersTree(IFormFile file)
+		{
+			if (file == null || file.Length <= 0)
+			{
+				ViewBag.Message = "Uploading error";
+				return View();
+			}
+
+			string fileContent = string.Empty;
+
+			using (StreamReader reader = new StreamReader(file.OpenReadStream()))
+			{
+				fileContent = await reader.ReadToEndAsync();
+			}
+
+			List<Folder> exportList = JsonSerializer.Deserialize<List<Folder>>(fileContent);
+
+			await _context.AddRangeAsync(exportList);
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction(nameof(ShowSubFolders));
+		}
+	}
 }
