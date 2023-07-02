@@ -63,11 +63,10 @@ namespace FolderTree.Controllers
 		// export folders tree
 		public async Task<FileResult> ExportFoldersTree()
 		{
-			List<Folder> export = await _context.Folders.Select(x => x).ToListAsync();
+			List<Folder> export = await _context.Folders.Select(x => new Folder() { Id = x.Id, Name = x.Name, ParrentId = x.ParrentId }).ToListAsync();
 
 			JsonSerializerOptions options = new()
 			{
-				ReferenceHandler = ReferenceHandler.Preserve, // ReferenceHandler.IgnoreCycles
 				WriteIndented = true
 			};
 
@@ -104,6 +103,7 @@ namespace FolderTree.Controllers
 
 			List<Folder> exportList = JsonSerializer.Deserialize<List<Folder>>(fileContent);
 
+			_context.Folders.RemoveRange(await _context.Folders.Select(x => x).ToListAsync());
 			await _context.AddRangeAsync(exportList);
 			await _context.SaveChangesAsync();
 
