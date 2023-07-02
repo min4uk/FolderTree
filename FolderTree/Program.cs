@@ -29,6 +29,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Folders}/{action=InitialDataCreation}/{id?}");
+    pattern: "{controller=Folders}/{action=InitialDataCreation}");
 
 app.Run();

@@ -27,7 +27,9 @@ namespace FolderTree.Controllers
 		{
 			if (_context.Folders.ToList().Count == 0)
 			{
-				await _context.AddRangeAsync(InitialData.InitialDataListGeneration());
+				await _context.AddRangeAsync(
+					InitialData.InitialDataListGeneration());
+
 				await _context.SaveChangesAsync();
 			}
 			return RedirectToAction(nameof(ShowSubFolders));
@@ -63,7 +65,13 @@ namespace FolderTree.Controllers
 		// export folders tree
 		public async Task<FileResult> ExportFoldersTree()
 		{
-			List<Folder> export = await _context.Folders.Select(x => new Folder() { Id = x.Id, Name = x.Name, ParrentId = x.ParrentId }).ToListAsync();
+			List<Folder> export = await _context.Folders
+				.Select(x => new Folder()
+				{ 
+					Id = x.Id, 
+					Name = x.Name, 
+					ParrentId = x.ParrentId 
+				}).ToListAsync();
 
 			JsonSerializerOptions options = new()
 			{
@@ -90,7 +98,7 @@ namespace FolderTree.Controllers
 		{
 			if (file == null || file.Length <= 0)
 			{
-				ViewBag.Message = "Uploading error";
+				ViewBag.ErrorMessage = "Uploading error";
 				return View();
 			}
 

@@ -1,6 +1,4 @@
-﻿@model FolderTree.Models.Folder
-
-@{
+﻿@{
 	ViewData["Title"] = "ImportFoldersTree";
 }
 
@@ -13,6 +11,8 @@
 	<div>
 		@Html.TextBox("file", "", new {  type= "file"}) <br />
 		<input type="submit" value="Upload" />
-		@ViewBag.Message
+		<div class="text-danger">
+			@ViewBag.ErrorMessage
+		</div>
 	</div>
 }
