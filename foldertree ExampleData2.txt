@@ -1,0 +1,37 @@
+[
+  {
+    "Id": 1,
+    "Name": "New root folder(2)",
+    "ParrentFolder": null,
+    "ParrentId": null,
+    "SubFolders": []
+  },
+  {
+    "Id": 2,
+    "Name": "Subfolder1(2)",
+    "ParrentFolder": null,
+    "ParrentId": 1,
+    "SubFolders": []
+  },
+  {
+    "Id": 3,
+    "Name": "Subfolder1 subfolder1(2)",
+    "ParrentFolder": null,
+    "ParrentId": 2,
+    "SubFolders": []
+  },
+  {
+    "Id": 4,
+    "Name": "Subfolder1 subfolder2(2)",
+    "ParrentFolder": null,
+    "ParrentId": 2,
+    "SubFolders": []
+  },
+  {
+    "Id": 5,
+    "Name": "Subfolder2(2)",
+    "ParrentFolder": null,
+    "ParrentId": 1,
+    "SubFolders": []
+  }
+]

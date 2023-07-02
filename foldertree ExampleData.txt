@@ -1,0 +1,58 @@
+[
+  {
+    "Id": 1,
+    "Name": "New root folder",
+    "ParrentFolder": null,
+    "ParrentId": null,
+    "SubFolders": []
+  },
+  {
+    "Id": 2,
+    "Name": "Subfolder1",
+    "ParrentFolder": null,
+    "ParrentId": 1,
+    "SubFolders": []
+  },
+  {
+    "Id": 3,
+    "Name": "Subfolder1 subfolder1",
+    "ParrentFolder": null,
+    "ParrentId": 2,
+    "SubFolders": []
+  },
+  {
+    "Id": 4,
+    "Name": "Subfolder1 subfolder2",
+    "ParrentFolder": null,
+    "ParrentId": 2,
+    "SubFolders": []
+  },
+  {
+    "Id": 5,
+    "Name": "Subfolder2",
+    "ParrentFolder": null,
+    "ParrentId": 1,
+    "SubFolders": []
+  },
+  {
+    "Id": 6,
+    "Name": "Subfolder3",
+    "ParrentFolder": null,
+    "ParrentId": 1,
+    "SubFolders": []
+  },
+  {
+    "Id": 7,
+    "Name": "Subfolder3 subfolder1",
+    "ParrentFolder": null,
+    "ParrentId": 6,
+    "SubFolders": []
+  },
+  {
+    "Id": 8,
+    "Name": "Subfolder3 subfolder2",
+    "ParrentFolder": null,
+    "ParrentId": 6,
+    "SubFolders": []
+  }
+]
