@@ -29,6 +29,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Folders}/{action=Index}/{id?}");
+    pattern: "{controller=Folders}/{action=ShowSubFolders}/{id=1}");
 
 app.Run();

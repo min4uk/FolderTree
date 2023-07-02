@@ -28,147 +28,35 @@ namespace FolderTree.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: SubFolders
+        public async Task<IActionResult> ShowSubFolders(int? id) 
+        {
+			if (id == null || _context.Folders == null)
+			{
+				return NotFound();
+			}
+
+            List<Folder> subFoldersList = await _context.Folders.Where(f => f.ParrentId == id).ToListAsync();
+
+			var folder = await _context.Folders
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (folder == null)
+			{
+				return NotFound();
+			}
+
+			folder.SubFolders = subFoldersList;
+
+            await _context.SaveChangesAsync();
+            			
+			return View(folder);
+        }
+
         // GET: Folders
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Folders.Include(f => f.ParrentFolder);
             return View(await appDbContext.ToListAsync());
-        }
-
-        // GET: Folders/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Folders == null)
-            {
-                return NotFound();
-            }
-
-            var folder = await _context.Folders
-                .Include(f => f.ParrentFolder)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (folder == null)
-            {
-                return NotFound();
-            }
-
-            return View(folder);
-        }
-
-        // GET: Folders/Create
-        public IActionResult Create()
-        {
-            ViewData["ParrentId"] = new SelectList(_context.Folders, "Id", "Id");
-            return View();
-        }
-
-        // POST: Folders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ParrentId")] Folder folder)
-        {
-            folder.ParrentFolder = _context.Folders.FirstOrDefault(f => f.Id == folder.ParrentId);
-            
-            if (ModelState.IsValid)
-            {
-                _context.Add(folder);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ParrentId"] = new SelectList(_context.Folders, "Id", "Id", folder.ParrentId);
-            return View(folder);
-        }
-
-        // GET: Folders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Folders == null)
-            {
-                return NotFound();
-            }
-
-            var folder = await _context.Folders.FindAsync(id);
-            if (folder == null)
-            {
-                return NotFound();
-            }
-            ViewData["ParrentId"] = new SelectList(_context.Folders, "Id", "Id", folder.ParrentId);
-            return View(folder);
-        }
-
-        // POST: Folders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ParrentId")] Folder folder)
-        {
-            if (id != folder.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(folder);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FolderExists(folder.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ParrentId"] = new SelectList(_context.Folders, "Id", "Id", folder.ParrentId);
-            return View(folder);
-        }
-
-        // GET: Folders/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Folders == null)
-            {
-                return NotFound();
-            }
-
-            var folder = await _context.Folders
-                .Include(f => f.ParrentFolder)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (folder == null)
-            {
-                return NotFound();
-            }
-
-            return View(folder);
-        }
-
-        // POST: Folders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Folders == null)
-            {
-                return Problem("Entity set 'AppDbContext.Folders'  is null.");
-            }
-            var folder = await _context.Folders.FindAsync(id);
-            if (folder != null)
-            {
-                _context.Folders.Remove(folder);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool FolderExists(int id)
