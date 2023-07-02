@@ -19,11 +19,11 @@ namespace FolderTree.Controllers
             _context = context;
         }
 
-        // Initial data creation
+        // Initial data creation if db is empty
         public async Task<IActionResult> InitialDataCreation()
         {
             if (_context.Folders.ToList().Count == 0)
-            {
+            {   
 				await _context.AddRangeAsync(InitialData.InitialDataListGeneration());
 				await _context.SaveChangesAsync();
 			}
