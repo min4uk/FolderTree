@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FolderTree.Models;
 using FolderTree.Data;
+using System.Text.Json;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace FolderTree.Controllers
 {
@@ -57,5 +60,22 @@ namespace FolderTree.Controllers
 			return View(folder);
         }
 
+        // Import folders tree
+        public async Task<FileResult> ExportFoldersTree()
+        {
+            var export = await _context.Folders.Select(x => x).ToListAsync();
+
+			JsonSerializerOptions options = new()
+			{
+				ReferenceHandler = ReferenceHandler.IgnoreCycles,
+				WriteIndented = true
+			};
+
+			string exportJson = JsonSerializer.Serialize(export, options);
+
+            byte[] exportBytes = Encoding.Default.GetBytes(exportJson);
+            
+            return File(exportBytes, "text/plain", "foldertree.txt");
+        }
     }
 }
