@@ -68,6 +68,8 @@ namespace FolderTree.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,ParrentId")] Folder folder)
         {
+            folder.ParrentFolder = _context.Folders.FirstOrDefault(f => f.Id == folder.ParrentId);
+            
             if (ModelState.IsValid)
             {
                 _context.Add(folder);

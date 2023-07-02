@@ -6,7 +6,7 @@
         public string Name { get; set; }
         public Folder? ParrentFolder { get; set; }
         public int? ParrentId { get; set; }
-        public List<Folder>? SubFolders { get; set; }
+        public ICollection<Folder> SubFolders { get; set; } = new List<Folder>();
 
     }
 }
