@@ -22,14 +22,16 @@ namespace FolderTree.Controllers
         // Initial data creation
         public async Task<IActionResult> InitialDataCreation()
         {
-            var dbContext = _context;
-            await dbContext.AddRangeAsync(InitialData.InitialDataListGeneration());
-            await dbContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (_context.Folders.ToList().Count == 0)
+            {
+				await _context.AddRangeAsync(InitialData.InitialDataListGeneration());
+				await _context.SaveChangesAsync();
+			}
+            return RedirectToAction(nameof(ShowSubFolders));
         }
 
         // GET: SubFolders
-        public async Task<IActionResult> ShowSubFolders(int? id) 
+        public async Task<IActionResult> ShowSubFolders(int? id = 1) 
         {
 			if (id == null || _context.Folders == null)
 			{
