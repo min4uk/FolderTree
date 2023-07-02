@@ -43,6 +43,11 @@ namespace FolderTree.Controllers
 				return NotFound();
 			}
 
+			if (_context.Folders.ToList().Count == 0)
+			{
+				return RedirectToAction(nameof(InitialDataCreation));
+			}
+
 			List<Folder> subFoldersList = await _context.Folders
 				.Where(f => f.ParrentId == id)
 				.ToListAsync();
